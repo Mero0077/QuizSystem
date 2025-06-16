@@ -17,6 +17,9 @@
         InstructorExists = 202, 
         #endregion
 
-        ChoiceNotFound=300
+        ChoiceNotFound=300,
+
+
+        ExamNotFound=400
     }
 }

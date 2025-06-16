@@ -41,32 +41,42 @@ namespace QuizSystem.Controllers
         public async Task<ResponseVM<CourseVM>> Get(int id)
         {
             var res = await _CourseService.GetCourseById(id);
-            return Ok(res);
+            if (res == null)
+                return new FailureResponseVM<CourseVM>(ErrorCode.CourseNotFound, "Course does not exist!");
+            var coursevm = _Mapper.Map<CourseVM>(res);
+            return new SuccessResponseVM<CourseVM>(coursevm, "Course retrieved successfully");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(CourseVM course)
+        public async Task<ResponseVM<CourseVM>> Add(CourseVM course)
         {
             var Course = _Mapper.Map<CourseRequestDTO>(course);
-            await _CourseService.AddCourse(Course);
-            return Ok(Course);
+            var addedCourse=  await _CourseService.AddCourse(Course);
+            var coursevm = _Mapper.Map<CourseVM>(addedCourse);
+            return new SuccessResponseVM<CourseVM>(coursevm, "Course added successfully");
         }
 
         [HttpPatch]
-        public async Task<IActionResult> Edit(CourseUpdateVM course)
+        public async Task<ResponseVM<CourseUpdateVM>> Edit(CourseUpdateVM course)
         {
             var Course = _Mapper.Map<CourseUpdateRequestDTO>(course);
 
-            await _CourseService.UpdateCourse(Course);
-            return Ok(Course);
+           var addedCourse= await _CourseService.UpdateCourse(Course);
+            var coursevm = _Mapper.Map<CourseUpdateVM>(addedCourse);
+            return new SuccessResponseVM<CourseUpdateVM>(coursevm, "Choice added successfully");
         }
 
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ResponseVM<CourseVM>> Delete(int id)
         {
-            await _CourseService.DeleteCourse(id);
-            return Ok();
+            var entity = await _CourseService.DeleteCourse(id);
+
+            if (entity == null)
+                return new FailureResponseVM<CourseVM>(ErrorCode.CourseNotFound, "Course not found");
+
+            var vm = _Mapper.Map<CourseVM>(entity);
+            return new SuccessResponseVM<CourseVM>(vm, "Course deleted successfully");
         }
 
         //[HttpGet]

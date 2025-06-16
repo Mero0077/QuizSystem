@@ -87,7 +87,7 @@ namespace QuizSystem.Services
             return true;
         }
 
-        public async Task<bool> EvaluateExam(int ExamId)
+        public async Task<StudentExam> EvaluateExam(int ExamId)
         {
 
             var studentexam = await _studentExamRepository.GetOne(e => e.ExamId == ExamId && e.StudentId == 1);
@@ -126,7 +126,7 @@ namespace QuizSystem.Services
             studentexam.Grade = Convert.ToDouble(TotalGrade);
             await _studentExamRepository.Update(studentexam);
 
-            return true;
+            return studentexam;
         }
 
     }
